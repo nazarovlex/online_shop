@@ -1,0 +1,25 @@
+{% extends "main/layout.html" %}
+
+{% block title %}Shop now {% endblock %}
+
+{% block content %}
+
+<div class="items">
+    <div class="card-group">
+        {% for item in data %}
+        <div class="card">
+            <img src="{{ item.img }}" class="card-img-top" alt="Product picture" height="240">
+            <div class="card-body">
+<!--                <h5 class="card-title">{{item.product_id}}</h5>-->
+                <p class="card-text"><strong>{{item.product_name}}</strong></p>
+                <p class="card-text">Shop: {{item.shop_name}}</p>
+                <p class="card-text">Price: {{item.price}}$$$</p>
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">Last updated 3 mins ago !!! DONT WORK NOW!</small>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
