@@ -1,0 +1,19 @@
+{% extends "main/layout.html" %}
+
+
+{% block title %}Shop now {% endblock %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+<div id="register" class="container py-5">
+	<h1>Update profile</h1>
+	<form method="POST">
+		{% csrf_token %}
+		{{ register_form|crispy }}
+		<button class="btn btn-primary" type="submit">Update</button>
+	</form>
+<!--	<p class="text-center">Do you want to delete your account? <a href="delete_account">Delete</a> forever.</p>-->
+	<label for="delete_button">Do you want to delete your account?</label>
+	<form action="delete_account" method="DELETE"><button id="delete_button">Delete</button></form>
+</div>
+{% endblock %}
