@@ -33,7 +33,7 @@
         <a href="{% url 'main' %}"><li><i class="fas fa-home">Main</i></li></a>
         <a href="{% url 'main' %}"><li><i class="fas fa-store">Shops</i></li></a>
         <a href="{% url 'main' %}"><li><i class="fas fa-question">About us</i></li></a>
-        <a href="{% url 'profile_settings' %}"><li><i class="fas fa-user-cog">Profile</i></li></a>
+        <a href="{% url 'profile_settings' %}"><li><i class="fas fa-user-cog">Update profile</i></li></a>
         <a href=""><li><i class="fas fa-cog">Shop setting</i></li></a>
         {% if user.is_authenticated %}
             <a href="{% url 'logout' %}"><li><i class="fas fa-minus-circle">{{ user.username }} | Log out</i></li></a>

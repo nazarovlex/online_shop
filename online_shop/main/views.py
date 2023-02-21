@@ -4,8 +4,8 @@ from .forms import NewUserForm
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
-from django.http import HttpResponse
 from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
 
 
 # Create your views here.
@@ -14,14 +14,17 @@ def main(request):
     return render(request, "main/main.html", {'data': data})
 
 
-# def registration(request):
-#     return render(request, "main/register.html")
-
 def register_request(request):
     if request.method == "POST":
         form = NewUserForm(request.POST)
         if form.is_valid():
             user = form.save()
+
+
+            my_group = Group.objects.get(name='Users')
+            my_group.user_set.add(user)
+
+
             login(request, user)
             messages.success(request, "Registration successful.")
             return redirect("main")
@@ -55,33 +58,18 @@ def logout_request(request):
     return redirect("main")
 
 
-# def delete_account(request):
-#     form = NewUserForm(request.POST)
-#     user = form.delete(request.user.id)
-#     # user_id = request.user.id
-#     # user.objects.filter(id=user_id).delete()
-#     return HttpResponseRedirect(reverse('index'))
-
-
-def profile_settings(request):
-    return render(request=request, template_name="main/profile_settings.html")
-
-
 def delete_user(request):
-    context = {}
-    username = request.user.id
+    username = request.user
     if not request.user.is_authenticated:
         return redirect("login")
 
-    if request.method == 'DELETE':
+    if request.method == 'GET':
         try:
-            user = request.user
-            user.delete()
-            context['msg'] = 'Bye Bye'
+            u = User.objects.get(username=username)
+            u.delete()
         except Exception as e:
-            context['msg'] = 'Something went wrong!'
+            messages.info(request, "Something went wrong!")
+    return render(request=request, template_name="main/delete_user.html")
 
-    else:
-        context['msg'] = 'Request method should be "DELETE"!'
-
-    return render(request, 'main/main.html', context=context)
+def profile_settings(request):
+    return render(request, "main/profile_settings.html")

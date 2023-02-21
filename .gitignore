@@ -2,4 +2,5 @@
 venv
 __pycache__
 /secret_key.txt
-/Django_test/Django_check/db.sqlite3
+/online_shop/db.sqlite3
+/online_shop/main/migrations/
