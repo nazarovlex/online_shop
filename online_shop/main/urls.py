@@ -10,6 +10,7 @@ urlpatterns = [
     path("logout", views.logout_request, name="logout"),
     path('delete_user', views.delete_user, name='delete_user'),
     path("profile_settings", views.profile_settings, name="profile_settings"),
+    path("user_cart", views.user_cart, name="user_cart"),
     *static(settings.STATIC_URL, document_root=settings.STATIC_ROOT),
     *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 ]

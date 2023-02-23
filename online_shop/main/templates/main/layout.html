@@ -34,7 +34,13 @@
         <a href="{% url 'main' %}"><li><i class="fas fa-store">Shops</i></li></a>
         <a href="{% url 'main' %}"><li><i class="fas fa-question">About us</i></li></a>
         <a href="{% url 'profile_settings' %}"><li><i class="fas fa-user-cog">Update profile</i></li></a>
-        <a href=""><li><i class="fas fa-cog">Shop setting</i></li></a>
+        {% for group in  request.user.groups.all %}
+            {%  if 'Users' == group.name %}
+                 <a href="{% url 'user_cart' %}"><li><i class="fas fa-cog">Cart</i></li></a>
+             {% else %}
+                <a href=""><li><i class="fas fa-cog">Shop setting</i></li></a>
+            {% endif %}
+        {% endfor %}
         {% if user.is_authenticated %}
             <a href="{% url 'logout' %}"><li><i class="fas fa-minus-circle">{{ user.username }} | Log out</i></li></a>
         {% else %}
