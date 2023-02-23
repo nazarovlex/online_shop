@@ -19,22 +19,29 @@ def user_cart(request):
     return render(request, "main/user_cart.html", {'data': data})
 
 
-
-
-
 def register_request(request):
     if request.method == "POST":
         form = NewUserForm(request.POST)
         if form.is_valid():
             user = form.save()
-            if user.groups.filter(name="Users").exists():
+            if request.POST["User_Shop_Radio"] == "User":
+                if user.groups.filter(name="Users").exists():
+                    my_group = Group.objects.get(name='Users')
+                    my_group.user_set.add(user)
+                else:
+                    Group.objects.create(name="Users")
+                    my_group = Group.objects.get(name='Users')
+                    my_group.user_set.add(user)
 
-                my_group = Group.objects.get(name='Users')
-                my_group.user_set.add(user)
-            else:
-                Group.objects.create(name="Users")
-                my_group = Group.objects.get(name='Users')
-                my_group.user_set.add(user)
+            elif request.POST["User_Shop_Radio"] == "Shop":
+                if user.groups.filter(name="Shops").exists():
+                    my_group = Group.objects.get(name='Shops')
+                    my_group.user_set.add(user)
+                else:
+                    Group.objects.create(name="Shops")
+                    my_group = Group.objects.get(name='Shops')
+                    my_group.user_set.add(user)
+
             login(request, user)
             messages.success(request, "Registration successful.")
             return redirect("main")
@@ -80,6 +87,7 @@ def delete_user(request):
         except Exception as e:
             messages.info(request, "Something went wrong!")
     return redirect("main")
+
 
 def profile_settings(request):
     return render(request, "main/profile_settings.html")

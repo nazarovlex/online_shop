@@ -11,14 +11,14 @@
         {% csrf_token %}
         {{ register_form|crispy }}
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-            <label class="form-check-label" for="flexRadioDefault1">
+            <input class="form-check-input" type="radio" name="User_Shop_Radio" id="UserRadio" value="User" checked>
+            <label class="form-check-label" for="UserRadio">
                 User
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
-            <label class="form-check-label" for="flexRadioDefault2">
+            <input class="form-check-input" type="radio" name="User_Shop_Radio" id="ShopRadio" value="Shop">
+            <label class="form-check-label" for="ShopRadio">
                 Shop
             </label>
         </div>
