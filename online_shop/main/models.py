@@ -17,3 +17,14 @@ class Items(models.Model):
     class Meta:
         verbose_name = "Item"
         verbose_name_plural = "Items"
+
+
+class Carts(models.Model):
+    user_id = models.IntegerField(null=True)
+    cart = models.JSONField(null=True)
+
+    class Meta:
+        verbose_name = "Cart"
+        verbose_name_plural = "Carts"
+
+

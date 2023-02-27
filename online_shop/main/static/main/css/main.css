@@ -80,3 +80,10 @@ main .items p {
     width: 35%;
     color: white;
 }
+
+#card_btn {
+    float: right;
+}
+.card-footer {
+    height: 50px;
+}

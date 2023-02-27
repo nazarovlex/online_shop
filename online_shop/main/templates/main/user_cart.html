@@ -6,7 +6,7 @@
 
 <div class="items">
     <div class="card-group">
-        {% for item in data %}
+        {% for item in cart %}
         <div class="card">
             <img src="{{ item.img }}" class="card-img-top" alt="Product picture" height="240">
             <div class="card-body">
@@ -15,7 +15,7 @@
                 <p class="card-text">Price: {{item.price}}$$$</p>
             </div>
             <div class="card-footer">
-              <button>Remove from cart</button>
+              <button id="card_btn" class="btn btn-danger">Remove from cart</button>
             </div>
         </div>
         {% endfor %}

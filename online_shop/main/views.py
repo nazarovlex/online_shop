@@ -1,4 +1,4 @@
-from .models import Items
+from .models import Items, Carts
 from django.shortcuts import render, redirect
 from .forms import NewUserForm
 from django.contrib import messages
@@ -11,36 +11,31 @@ from django.contrib.auth.models import Group
 # Create your views here.
 def main(request):
     data = Items.objects.all()
+
     return render(request, "main/main.html", {'data': data})
 
 
 def user_cart(request):
-    data = Items.objects.all()
-    return render(request, "main/user_cart.html", {'data': data})
+    print(request.user.id)
+    cart = Carts.objects.filter(user_id=request.user.id)
+    return render(request, "main/user_cart.html", {'cart': cart})
 
 
 def register_request(request):
+
     if request.method == "POST":
         form = NewUserForm(request.POST)
         if form.is_valid():
             user = form.save()
             if request.POST["User_Shop_Radio"] == "User":
-                if user.groups.filter(name="Users").exists():
-                    my_group = Group.objects.get(name='Users')
-                    my_group.user_set.add(user)
-                else:
-                    Group.objects.create(name="Users")
-                    my_group = Group.objects.get(name='Users')
-                    my_group.user_set.add(user)
+                Group.objects.get_or_create(name="Users")
+                my_group = Group.objects.get(name="Users")
+                my_group.user_set.add(user)
 
             elif request.POST["User_Shop_Radio"] == "Shop":
-                if user.groups.filter(name="Shops").exists():
-                    my_group = Group.objects.get(name='Shops')
-                    my_group.user_set.add(user)
-                else:
-                    Group.objects.create(name="Shops")
-                    my_group = Group.objects.get(name='Shops')
-                    my_group.user_set.add(user)
+                Group.objects.get_or_create(name="Shops")
+                my_group = Group.objects.get(name="Shops")
+                my_group.user_set.add(user)
 
             login(request, user)
             messages.success(request, "Registration successful.")
