@@ -10,13 +10,24 @@ from django.contrib.auth.models import Group
 
 # Create your views here.
 def main(request):
-    data = Items.objects.all()
-
-    return render(request, "main/main.html", {'data': data})
+    items = Items.objects.all()
+    return render(request, "main/main.html", {'items': items})
 
 
 def user_cart(request):
-    print(request.user.id)
+
+    cart = Carts.objects.filter(user_id=request.user.id)
+    return render(request, "main/user_cart.html", {'cart': cart})
+
+
+def add_to_user_cart(request):
+    items = Items.objects.all()
+    cart = Carts.objects.filter(user_id=request.user.id)
+    return render(request, "main/user_cart.html", {'cart': cart})
+
+
+def remove_from_user_cart(request):
+    items = Items.objects.all()
     cart = Carts.objects.filter(user_id=request.user.id)
     return render(request, "main/user_cart.html", {'cart': cart})
 

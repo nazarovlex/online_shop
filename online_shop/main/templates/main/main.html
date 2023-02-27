@@ -6,7 +6,7 @@
 
 <div class="items">
     <div class="card-group">
-        {% for item in data %}
+        {% for item in items %}
         <div class="card">
             <img src="{{ item.img }}" class="card-img-top" alt="Product picture" height="240">
             <div class="card-body">
@@ -15,7 +15,11 @@
                 <p class="card-text">Price: {{item.price}}$$$</p>
             </div>
             <div class="card-footer">
-              <button id="card_btn" class="btn btn-success">Add to cart</button>
+                {% if user.is_authenticated %}
+                    <button id="card_btn" class="btn btn-success">Add to cart</button>
+                {% else %}
+                    <button id="card_btn" class="btn btn-success" disabled>Add to cart</button>
+                {% endif %}
             </div>
         </div>
         {% endfor %}
