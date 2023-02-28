@@ -6,6 +6,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
+import sqlite3
 
 
 # Create your views here.
@@ -15,15 +16,40 @@ def main(request):
 
 
 def user_cart(request):
-
     cart = Carts.objects.filter(user_id=request.user.id)
     return render(request, "main/user_cart.html", {'cart': cart})
 
 
 def add_to_user_cart(request):
+    # new_item_id = int(str(request)[46:-2])
+    new_item_id = request.META['QUERY_STRING'].split("=")[1]
+    connection = sqlite3.connect("db.sqlite3")
+    cursor = connection.cursor()
+    user = request.user.id
+    print(f"user id - {user}\n item - {new_item_id}")
+    with connection:
+        cart = connection.execute(
+            """select cart from main_carts where user_id = {}""".format(user)
+        )
+        tmp_cart_to_update = cart.fetchone()
+        if tmp_cart_to_update is None:
+            # Делаем когда нету человека в бд
+            cursor.execute(f"INSERT INTO main_carts (user_id, cart) VALUES ({user}, '[{new_item_id}]')")
+
+        else:
+            # Делаем когда есть человек в бд
+            cart_to_update = tmp_cart_to_update[0].strip('][').split(', ')
+            print(f"type - {type(cart_to_update)}  old_cart{cart_to_update}")
+            cart_to_update.append(new_item_id)
+            print(f"type - {type(cart_to_update)} new_cart{cart_to_update}")
+            # connection.execute(f"UPDATE main_carts SET cart={cart_to_update} WHERE user_id={user}")
+            # cursor.execute('UPDATE main_carts SET cart=? WHERE user_id=?', (cart_to_update, user,))
+            cursor.execute('UPDATE main_carts SET cart = ? WHERE user_id = ?', (f"{cart_to_update}", user))
+
     items = Items.objects.all()
     cart = Carts.objects.filter(user_id=request.user.id)
-    return render(request, "main/user_cart.html", {'cart': cart})
+    return render(request, "main/main.html", {'items': items})
+    # return render(request, "main/user_cart.html", {'cart': cart})
 
 
 def remove_from_user_cart(request):
@@ -33,7 +59,6 @@ def remove_from_user_cart(request):
 
 
 def register_request(request):
-
     if request.method == "POST":
         form = NewUserForm(request.POST)
         if form.is_valid():
