@@ -1,4 +1,4 @@
-from .models import Items, Carts
+from .models import Items, Carts, ShopItems
 from django.shortcuts import render, redirect
 from .forms import NewUserForm
 from django.contrib import messages
@@ -6,7 +6,6 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
-import sqlite3
 
 
 # Create your views here.
@@ -15,47 +14,88 @@ def main(request):
     return render(request, "main/main.html", {'items': items})
 
 
+def shop_items(request):
+    shop_id = request.user.id
+    print(shop_id, type(shop_id))
+    items = Items.objects.all()
+    try:
+        shop = (ShopItems.objects.get(shop_id=shop_id)).shop_items
+    except ShopItems.DoesNotExist:
+        shop = None
+    return render(request, "main/shop_items.html", {'items': items, 'shop': shop})
+
+
+def add_item_to_shop(request):
+    return redirect("main")
+
+
+def remove_shop_item(request):
+    delete_item_id = request.META['QUERY_STRING'].split("=")[1]
+    shop_id = request.user.id
+
+    record = ShopItems.objects.get(shop_id=shop_id)
+    items = record.shop_items
+
+    items.remove(delete_item_id)
+    record.delete()
+
+    record = ShopItems(shop_id=shop_id, shop_items=items)
+    record.save()
+    messages.warning(request, "The item was removed from your shop!")
+    return redirect("shop_items")
+
+
 def user_cart(request):
-    cart = Carts.objects.filter(user_id=request.user.id)
-    return render(request, "main/user_cart.html", {'cart': cart})
+    items = Items.objects.all()
+    try:
+        cart = (Carts.objects.get(user_id=request.user.id)).cart
+    except Carts.DoesNotExist:
+        cart = None
+    return render(request, "main/user_cart.html", {'cart': cart, 'items': items})
 
 
 def add_to_user_cart(request):
-    # new_item_id = int(str(request)[46:-2])
     new_item_id = request.META['QUERY_STRING'].split("=")[1]
-    connection = sqlite3.connect("db.sqlite3")
-    cursor = connection.cursor()
     user = request.user.id
-    print(f"user id - {user}\n item - {new_item_id}")
-    with connection:
-        cart = connection.execute(
-            """select cart from main_carts where user_id = {}""".format(user)
-        )
-        tmp_cart_to_update = cart.fetchone()
-        if tmp_cart_to_update is None:
-            # Делаем когда нету человека в бд
-            cursor.execute(f"INSERT INTO main_carts (user_id, cart) VALUES ({user}, '[{new_item_id}]')")
 
+    existed_row = Carts.objects.filter(user_id=user).exists()
+    if not existed_row:
+        # Делаем когда нету человека в бд
+        new_cart = Carts(user_id=user, cart=[new_item_id])
+        new_cart.save()
+        messages.success(request, "Product was added to your cart!")
+    else:
+        # Делаем когда есть человек в бд
+        record = Carts.objects.get(user_id=user)
+
+        cart_to_update = record.cart
+        if new_item_id in cart_to_update:
+            messages.error(request, "This item already in your cart!")
         else:
-            # Делаем когда есть человек в бд
-            cart_to_update = tmp_cart_to_update[0].strip('][').split(', ')
-            print(f"type - {type(cart_to_update)}  old_cart{cart_to_update}")
             cart_to_update.append(new_item_id)
-            print(f"type - {type(cart_to_update)} new_cart{cart_to_update}")
-            # connection.execute(f"UPDATE main_carts SET cart={cart_to_update} WHERE user_id={user}")
-            # cursor.execute('UPDATE main_carts SET cart=? WHERE user_id=?', (cart_to_update, user,))
-            cursor.execute('UPDATE main_carts SET cart = ? WHERE user_id = ?', (f"{cart_to_update}", user))
+            record.delete()
 
-    items = Items.objects.all()
-    cart = Carts.objects.filter(user_id=request.user.id)
-    return render(request, "main/main.html", {'items': items})
-    # return render(request, "main/user_cart.html", {'cart': cart})
+            updated_cart = Carts(user_id=user, cart=cart_to_update)
+            updated_cart.save()
+            messages.success(request, "Product was added to your cart!")
+
+    return redirect("main")
 
 
 def remove_from_user_cart(request):
-    items = Items.objects.all()
-    cart = Carts.objects.filter(user_id=request.user.id)
-    return render(request, "main/user_cart.html", {'cart': cart})
+    delete_item_id = request.META['QUERY_STRING'].split("=")[1]
+    user = request.user.id
+
+    record = Carts.objects.get(user_id=user)
+    cart_to_update = record.cart
+
+    cart_to_update.remove(delete_item_id)
+    record.delete()
+
+    record = Carts(user_id=user, cart=cart_to_update)
+    record.save()
+    messages.warning(request, "The item was removed from your cart!")
+    return redirect("user_cart")
 
 
 def register_request(request):

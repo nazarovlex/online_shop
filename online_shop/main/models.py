@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.db import models
 
 
@@ -21,12 +20,19 @@ class Items(models.Model):
 
 
 class Carts(models.Model):
-    # user_id = models.IntegerField(default='', null=True)
-    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, default=0, null=True, on_delete=models.CASCADE)
-    cart = models.JSONField(null=True,blank=True)
+    user_id = models.IntegerField(null=True)
+    cart = models.JSONField(null=True, blank=True)
 
     class Meta:
         verbose_name = "Cart"
         verbose_name_plural = "Carts"
 
+
+class ShopItems(models.Model):
+    shop_id = models.IntegerField(null=True)
+    shop_items = models.JSONField(null=True, blank=True)
+
+    class Meta:
+        verbose_name = "ShopItem"
+        verbose_name_plural = "ShopItems"
 

@@ -23,7 +23,6 @@ MESSAGE_TAGS = {
  }
 
 
-
 with open('/home/aleksey/Repo/Django_test/secret_key.txt') as f:
     SECRET_KEY = f.read().strip()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.

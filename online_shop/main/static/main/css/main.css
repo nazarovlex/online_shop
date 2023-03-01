@@ -73,7 +73,7 @@ main .items p {
 }
 
 #register, #login {
-    float:left;
+    float: left;
     margin-top: 50px;
     margin-left: 50px;
     text-align: left;
@@ -84,6 +84,7 @@ main .items p {
 #card_btn {
     float: right;
 }
+
 .card-footer {
     height: 50px;
 }
