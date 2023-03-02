@@ -1,5 +1,6 @@
 body {
     background: #2c2c2c;
+    overflow-x: hidden;
 }
 
 aside {
@@ -10,7 +11,12 @@ aside {
     height: 100vh;
     color: #fff;
     border-right: 5px solid #4d4d4d;
+    position: fixed;
+}
 
+main {
+    position: absolute;
+    margin-left: 350px;
 }
 
 aside img {
@@ -55,7 +61,6 @@ main .items {
     margin-top: 50px;
     margin-left: 50px;
     text-align: center;
-    width: 75%;
 }
 
 main .items h1 {
@@ -91,4 +96,8 @@ main .items p {
 
 #new_item_form {
     color: white;
+}
+
+.col {
+    padding-top: 25px;
 }

@@ -1,4 +1,3 @@
-
 from .models import Items, Carts
 from django.shortcuts import render, redirect
 from .forms import NewUserForm, NewItemForm
@@ -13,7 +12,6 @@ from django.contrib.auth.models import Group
 #     model = Items
 #     template_name = "main/shop_new_item.html"
 #     context_object_name = "New_item"
-
 
 def main(request):
     items = Items.objects.all()

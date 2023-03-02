@@ -5,30 +5,33 @@
 {% block content %}
 
 <div class="items">
-    <div class="card-group">
-        {% for item in items %}
-        <div class="card">
-            <img src="{{ item.img }}" class="card-img-top" alt="Product picture" height="240">
-            <div class="card-body">
-                <p class="card-text"><strong>{{item.product_name}}</strong></p>
-                <p class="card-text">Shop: {{item.shop_name}}</p>
-                <p class="card-text">Price: {{item.price}}$$$</p>
-            </div>
-            <div class="card-footer">
-                {% csrf_token %}
+    <div class="row row-cols-md-5 g-100">
 
-                {% for group in  request.user.groups.all %}
+        {% for item in items %}
+        <div class="col">
+            <div class="card">
+                <img src="{{ item.img }}" class="card-img-top" alt="Product picture" height="240">
+                <div class="card-body">
+                    <p class="card-text"><strong>{{item.product_name}}</strong></p>
+                    <p class="card-text">Shop: {{item.shop_name}}</p>
+                    <p class="card-text">Price: {{item.price}}$$$</p>
+                </div>
+                <div class="card-footer">
+                    {% csrf_token %}
+
+                    {% for group in request.user.groups.all %}
                     {% if 'Users' == group.name and user.is_authenticated %}
-                        <form action="{% url 'add_to_user_cart' %}?item_id={{  item.id }}" method="post">
-                            {% csrf_token %}
-                            <button id="card_btn" class="btn btn-success">Add to cart</button>
-                        </form>
+                    <form action="{% url 'add_to_user_cart' %}?item_id={{  item.id }}" method="post">
+                        {% csrf_token %}
+                        <button id="card_btn" class="btn btn-success">Add to cart</button>
+                    </form>
                     {% endif %}
-                {% endfor %}
+                    {% endfor %}
+                </div>
             </div>
         </div>
-
         {% endfor %}
+
     </div>
 </div>
 {% endblock %}
