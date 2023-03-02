@@ -101,3 +101,8 @@ main .items p {
 .col {
     padding-top: 25px;
 }
+
+#btn_new_item {
+    margin-left: 55px;
+    margin-top: 25px;
+}

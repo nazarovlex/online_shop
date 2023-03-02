@@ -5,7 +5,7 @@
 {% block content %}
 <form action="{% url 'shop_new_item' %}" method="get" >
     {% csrf_token %}
- <button class="btn btn-success">Add new item for sale</button>
+ <button class="btn btn-success" id="btn_new_item">Add new item for sale</button>
 </form>
 <div class="items">
     <div class="card-group">
