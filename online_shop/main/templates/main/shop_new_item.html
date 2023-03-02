@@ -3,31 +3,14 @@
 {% block title %}Shop now {% endblock %}
 
 {% block content %}
-<form action="" method="post" >
- <button class="btn btn-success">Add new item for sale</button>
-</form>
-<div class="items">
-    <div class="card-group">
-        {% for item in items %}
-            {% if item.product_id in shop %}
-                <div class="card">
-                    <img src="{{ item.img }}" class="card-img-top" alt="Product picture" height="240">
-                    <div class="card-body">
-                        <p class="card-text"><strong>{{item.product_name}}</strong></p>
-                        <p class="card-text">Shop: {{item.shop_name}}</p>
-                        <p class="card-text">Price: {{item.price}}$$$</p>
-                    </div>
-                    <div class="card-footer">
-                        <form action="{% url 'remove_shop_item' %}?item_id={{  item.product_id }}" method="post" >
-                            {% csrf_token %}
-                            <button id="card_btn" class="btn btn-danger">Remove from shop list</button>
-                        </form>
-                    </div>
-                </div>
-            {% endif %}
-        {% endfor %}
-
-
-    </div>
+<div class="items" id="new_item_form">
+    <h1>Listing an item for sale</h1>
+    <form method="post" enctype="multipart/form-data" data-ajax="false">
+        {% csrf_token %}
+        <p>Product name: {{ form.product_name }}</p>
+        <p>Price: {{ form.price }}$</p>
+        <p>Image of a product: {{ form.img }}</p>
+        <button class="btn btn-primary" type="submit">Add item</button>
+    </form>
 </div>
 {% endblock %}

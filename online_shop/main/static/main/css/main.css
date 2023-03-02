@@ -60,7 +60,7 @@ main .items {
 
 main .items h1 {
     font-size: 50px;
-    color: black;
+    color: white;
 }
 
 main .items p {
@@ -87,4 +87,8 @@ main .items p {
 
 .card-footer {
     height: 50px;
+}
+
+#new_item_form {
+    color: white;
 }

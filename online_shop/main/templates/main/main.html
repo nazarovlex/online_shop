@@ -14,21 +14,19 @@
                 <p class="card-text">Shop: {{item.shop_name}}</p>
                 <p class="card-text">Price: {{item.price}}$$$</p>
             </div>
-
-            {%  if 'Users' == group.name %}
-                <div class="card-footer">
+            <div class="card-footer">
                 {% csrf_token %}
-                <form action="{% url 'add_to_user_cart' %}?item_id={{  item.product_id }}" method="post" >
-                    {% csrf_token %}
-                    <button id="card_btn" class="btn btn-success">Add to cart</button>
-                </form>
-                    </div>
-                {% elif not user.is_authenticated %}
-                    <div class="card-footer">
-                    <button id="card_btn" class="btn btn-success"  title="You need to Log in, before purchase" disabled>Add to cart</button>
-                    </div>
-                {% endif %}
-                </div>
+
+                {% for group in  request.user.groups.all %}
+                    {% if 'Users' == group.name and user.is_authenticated %}
+                        <form action="{% url 'add_to_user_cart' %}?item_id={{  item.id }}" method="post">
+                            {% csrf_token %}
+                            <button id="card_btn" class="btn btn-success">Add to cart</button>
+                        </form>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
 
         {% endfor %}
     </div>

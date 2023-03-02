@@ -3,13 +3,14 @@
 {% block title %}Shop now {% endblock %}
 
 {% block content %}
-<form action="" method="post" >
+<form action="{% url 'shop_new_item' %}" method="get" >
+    {% csrf_token %}
  <button class="btn btn-success">Add new item for sale</button>
 </form>
 <div class="items">
     <div class="card-group">
         {% for item in items %}
-            {% if item.product_id in shop %}
+            {% if item.id in shop %}
                 <div class="card">
                     <img src="{{ item.img }}" class="card-img-top" alt="Product picture" height="240">
                     <div class="card-body">
@@ -18,7 +19,7 @@
                         <p class="card-text">Price: {{item.price}}$$$</p>
                     </div>
                     <div class="card-footer">
-                        <form action="{% url 'remove_shop_item' %}?item_id={{  item.product_id }}" method="post" >
+                        <form action="{% url 'remove_shop_item' %}?item_id={{  item.id }}" method="post" >
                             {% csrf_token %}
                             <button id="card_btn" class="btn btn-danger">Remove from shop list</button>
                         </form>

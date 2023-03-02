@@ -1,6 +1,9 @@
-from django import forms
+from django.forms import ModelForm, NumberInput
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.forms import TextInput, ImageField, FileInput
+from .models import Items
+from django import forms
 
 
 class NewUserForm(UserCreationForm):
@@ -16,3 +19,25 @@ class NewUserForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class NewItemForm(ModelForm):
+    class Meta:
+        model = Items
+        # product_name = forms.TextInput
+        # shop_name = forms.TextInput
+        fields = ["product_name" , "price", "img"]
+
+        widgets = {
+            "product_name": TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Name of product"
+            }),
+
+            "price": NumberInput(attrs={
+                "placeholder": "Input price",
+                'class': 'form-control'}),
+            "img": FileInput(attrs={
+                "upload_to": "'main/static/main/img'"
+            })
+        }

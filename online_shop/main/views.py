@@ -1,6 +1,7 @@
-from .models import Items, Carts, ShopItems
+
+from .models import Items, Carts
 from django.shortcuts import render, redirect
-from .forms import NewUserForm
+from .forms import NewUserForm, NewItemForm
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
@@ -8,39 +9,43 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
 
 
-# Create your views here.
+# class AddNewItem(CreateView):
+#     model = Items
+#     template_name = "main/shop_new_item.html"
+#     context_object_name = "New_item"
+
+
 def main(request):
     items = Items.objects.all()
     return render(request, "main/main.html", {'items': items})
 
 
 def shop_items(request):
-    shop_id = request.user.id
-    print(shop_id, type(shop_id))
     items = Items.objects.all()
-    try:
-        shop = (ShopItems.objects.get(shop_id=shop_id)).shop_items
-    except ShopItems.DoesNotExist:
-        shop = None
+    shop = []
+    for item in items:
+        if str(item.shop_name) == str(request.user):
+            shop.append(item.id)
+
     return render(request, "main/shop_items.html", {'items': items, 'shop': shop})
 
 
 def add_item_to_shop(request):
-    return redirect("main")
+    if request.method == "POST":
+        form = NewItemForm(request.POST, request.FILES)
+        form.instance.shop_name = request.user
+        if form.is_valid():
+            form.save()
+            return redirect("shop_items")
+        else:
+            messages.error(request, "Incorrect form")
+    form = NewItemForm()
+    return render(request, "main/shop_new_item.html", {'form': form})
 
 
 def remove_shop_item(request):
     delete_item_id = request.META['QUERY_STRING'].split("=")[1]
-    shop_id = request.user.id
-
-    record = ShopItems.objects.get(shop_id=shop_id)
-    items = record.shop_items
-
-    items.remove(delete_item_id)
-    record.delete()
-
-    record = ShopItems(shop_id=shop_id, shop_items=items)
-    record.save()
+    Items.objects.filter(id=delete_item_id).delete()
     messages.warning(request, "The item was removed from your shop!")
     return redirect("shop_items")
 
@@ -155,7 +160,7 @@ def delete_user(request):
         try:
             u = User.objects.get(username=username)
             u.delete()
-        except Exception as e:
+        except Exception:
             messages.info(request, "Something went wrong!")
     return redirect("main")
 
