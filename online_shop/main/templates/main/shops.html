@@ -1,0 +1,16 @@
+{% extends "main/layout.html" %}
+
+{% block title %}Shop now {% endblock %}
+
+{% block content %}
+<ul class="list-group">
+  {% for shop in shops_names %}
+  <form action="{% url 'selected_store' %}?shop_name={{ shop }}" method="post">
+    {% csrf_token %}
+    <a href="{% url 'selected_store' %}?shop_name={{ shop }}" methods="post" class="list-group-item list-group-item-action">{{ shop }}</a>
+  </form>
+
+  {% endfor %}
+</ul>
+
+{% endblock %}

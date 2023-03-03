@@ -3,32 +3,33 @@
 {% block title %}Shop now {% endblock %}
 
 {% block content %}
-<form action="{% url 'shop_new_item' %}" method="get" >
+<form action="{% url 'shop_new_item' %}" method="get">
     {% csrf_token %}
- <button class="btn btn-success" id="btn_new_item">Add new item for sale</button>
+    <button class="btn btn-success" id="btn_new_item">Add new item for sale</button>
 </form>
-<div class="items">
-    <div class="card-group">
+
+<div class="items" id="items">
+    <div class="row row-cols-md-5 g-100">
         {% for item in items %}
             {% if item.id in shop %}
-                <div class="card">
-                    <img src="{{ item.img }}" class="card-img-top" alt="Product picture" height="240">
-                    <div class="card-body">
-                        <p class="card-text"><strong>{{item.product_name}}</strong></p>
-                        <p class="card-text">Shop: {{item.shop_name}}</p>
-                        <p class="card-text">Price: {{item.price}}$$$</p>
-                    </div>
-                    <div class="card-footer">
-                        <form action="{% url 'remove_shop_item' %}?item_id={{  item.id }}" method="post" >
-                            {% csrf_token %}
-                            <button id="card_btn" class="btn btn-danger">Remove from shop list</button>
-                        </form>
+                <div class="col">
+                    <div class="card">
+                        <img src="{{ item.img }}" class="card-img-top" alt="Product picture" height="240">
+                        <div class="card-body">
+                            <p class="card-text">
+                                <strong>{{item.product_name}}</strong><br>
+                                Shop: {{item.shop_name}}<br>
+                                Price: {{item.price}}$$$</p>
+
+                            <form action="{% url 'remove_shop_item' %}?item_id={{  item.id }}" method="post">
+                                {% csrf_token %}
+                                <button id="card_btn" class="btn btn-danger">Remove from shop list</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             {% endif %}
         {% endfor %}
-
-
     </div>
 </div>
 {% endblock %}

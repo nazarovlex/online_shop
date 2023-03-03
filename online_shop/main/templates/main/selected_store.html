@@ -8,7 +8,7 @@
     <div class="row row-cols-md-5 g-100">
 
         {% for item in items %}
-        {% if item.id in cart %}
+        {% if item.shop_name == shop_name %}
         <div class="col">
             <div class="card">
                 <img src="{{ item.img }}" class="card-img-top" alt="Product picture" height="240">
@@ -18,16 +18,21 @@
                         Shop: {{item.shop_name}}<br>
                         Price: {{item.price}}$$$</p>
 
-                    <form action="{% url 'remove_from_user_cart' %}?item_id={{  item.id }}" method="post">
+                    {% csrf_token %}
+
+                    {% for group in request.user.groups.all %}
+                    {% if 'Users' == group.name and user.is_authenticated %}
+                    <form action="{% url 'add_to_user_cart' %}?item_id={{  item.id }}" method="post">
                         {% csrf_token %}
-                        <button id="card_btn" class="btn btn-danger">Remove from cart</button>
+                        <button id="card_btn" class="btn btn-success">Add to cart</button>
                     </form>
+                    {% endif %}
+                    {% endfor %}
                 </div>
             </div>
         </div>
         {% endif %}
         {% endfor %}
-
 
     </div>
 </div>

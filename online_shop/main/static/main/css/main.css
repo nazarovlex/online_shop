@@ -13,11 +13,28 @@ aside {
     border-right: 5px solid #4d4d4d;
     position: fixed;
 }
-
-main {
+.list-group {
     position: absolute;
-    margin-left: 350px;
+    margin-top: 200px;
+    margin-left: 400px;
+    width: 30%;
+
 }
+#items {
+    position: absolute;
+    margin-left: 400px;
+    width: 70%;
+}
+
+#login, #register {
+    position: absolute;
+    margin-left: 400px;
+    margin-top: 50px;
+    text-align: left;
+    width: 35%;
+    color: white;
+}
+
 
 aside img {
     width: 80px;
@@ -77,25 +94,17 @@ main .items p {
     max-width: 240px;
 }
 
-#register, #login {
-    float: left;
-    margin-top: 50px;
-    margin-left: 50px;
-    text-align: left;
-    width: 35%;
-    color: white;
-}
 
 #card_btn {
     float: right;
 }
 
-.card-footer {
-    height: 50px;
-}
 
 #new_item_form {
     color: white;
+    position: absolute;
+    margin-left: 400px;
+    float: left;
 }
 
 .col {
@@ -103,6 +112,14 @@ main .items p {
 }
 
 #btn_new_item {
-    margin-left: 55px;
+    position: absolute;
+    margin-left: 400px;
     margin-top: 25px;
+}
+
+.container-fluid {
+    position: absolute;
+    width: 80%;
+    margin-left: 370px;
+    text-align: center;
 }

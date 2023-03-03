@@ -4,20 +4,19 @@
 
 {% block content %}
 
-<div class="items">
+<div class="items" id="items">
     <div class="row row-cols-md-5 g-100">
 
         {% for item in items %}
         <div class="col">
-            <div class="card h-1000">
+            <div class="card">
                 <img src="{{ item.img }}" class="card-img-top" alt="Product picture" height="240">
                 <div class="card-body">
-                    <p class="card-text"><strong>{{item.product_name}}</strong> <br>Shop: {{item.shop_name}}<br>Price: {{item.price}}$$$</p>
-<!--                    <p class="card-text"><strong>{{item.product_name}}</strong></p>-->
-<!--                    <p class="card-text">Shop: {{item.shop_name}}</p>-->
-<!--                    <p class="card-text">Price: {{item.price}}$$$</p>-->
-                </div>
-                <div class="card-footer">
+                    <p class="card-text">
+                        <strong>{{item.product_name}}</strong><br>
+                        Shop: {{item.shop_name}}<br>
+                        Price: {{item.price}}$$$</p>
+
                     {% csrf_token %}
 
                     {% for group in request.user.groups.all %}

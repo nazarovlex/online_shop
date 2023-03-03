@@ -6,7 +6,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
-
+from django.http import HttpResponseRedirect
 
 # class AddNewItem(CreateView):
 #     model = Items
@@ -16,6 +16,21 @@ from django.contrib.auth.models import Group
 def main(request):
     items = Items.objects.all()
     return render(request, "main/main.html", {'items': items})
+
+
+def shops(request):
+    shops_names = []
+    items = Items.objects.all()
+    for item in items:
+        if item.shop_name not in shops_names:
+            shops_names.append(item.shop_name)
+    return render(request, "main/shops.html", {'items': items, 'shops_names': shops_names})
+
+
+def selected_store(request):
+    items = Items.objects.all()
+    shop_name = request.META['QUERY_STRING'].split("=")[1]
+    return render(request, "main/selected_store.html", {'items': items, 'shop_name': shop_name})
 
 
 def shop_items(request):
@@ -50,15 +65,24 @@ def remove_shop_item(request):
 
 def user_cart(request):
     items = Items.objects.all()
+    cart = []
     try:
-        cart = (Carts.objects.get(user_id=request.user.id)).cart
+        user_items = (Carts.objects.get(user_id=request.user.id)).cart
+        for item in items:
+            if str(item.id) in user_items:
+                cart.append(item.id)
     except Carts.DoesNotExist:
         cart = None
     return render(request, "main/user_cart.html", {'cart': cart, 'items': items})
 
 
 def add_to_user_cart(request):
+
+    address = request.META.get('HTTP_REFERER').split("/")[3]
+
     new_item_id = request.META['QUERY_STRING'].split("=")[1]
+    print(new_item_id)
+
     user = request.user.id
 
     existed_row = Carts.objects.filter(user_id=user).exists()
@@ -82,7 +106,10 @@ def add_to_user_cart(request):
             updated_cart.save()
             messages.success(request, "Product was added to your cart!")
 
-    return redirect("main")
+    if address.split("?")[0] == "selected_store":
+        return redirect(f"/{address}")
+    else:
+        return redirect("main")
 
 
 def remove_from_user_cart(request):
