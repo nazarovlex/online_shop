@@ -8,7 +8,7 @@
     <form method="post" enctype="multipart/form-data" data-ajax="false">
         {% csrf_token %}
         <p>Product name: {{ form.product_name }}</p>
-        <p>Price: {{ form.price }}$</p>
+        <p>Price: {{ form.price }}</p>
         <p>Image of a product: {{ form.img }}</p>
         <button class="btn btn-primary" type="submit">Add item</button>
     </form>

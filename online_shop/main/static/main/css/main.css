@@ -1,6 +1,7 @@
 body {
     background: #2c2c2c;
-    overflow-x: hidden;
+    /*overflow-x: hidden;*/
+    /*overflow-y: visible;*/
 }
 
 aside {
@@ -20,10 +21,16 @@ aside {
     width: 30%;
 
 }
+
 #items {
     position: absolute;
     margin-left: 400px;
     width: 70%;
+}
+
+.card:hover, .card:active {
+    transform: scale(1.05);
+    transition: all .6s;
 }
 
 #login, #register {
@@ -72,6 +79,7 @@ aside ul li:hover, aside ul a:hover {
     transform: scale(1.05);
 }
 
+
 main .items {
     float: left;
     color: black;
@@ -119,7 +127,7 @@ main .items p {
 
 .container-fluid {
     position: absolute;
-    width: 80%;
-    margin-left: 370px;
+    width: 70%;
+    margin-left: 400px;
     text-align: center;
 }

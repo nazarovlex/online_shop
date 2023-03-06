@@ -1,3 +1,5 @@
+from django.http import HttpResponseRedirect
+
 from .models import Items, Carts
 from django.shortcuts import render, redirect
 from .forms import NewUserForm, NewItemForm
@@ -6,16 +8,20 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
-from django.http import HttpResponseRedirect
 
-# class AddNewItem(CreateView):
-#     model = Items
-#     template_name = "main/shop_new_item.html"
-#     context_object_name = "New_item"
 
 def main(request):
     items = Items.objects.all()
-    return render(request, "main/main.html", {'items': items})
+    cart = []
+    try:
+        user_items = (Carts.objects.get(user_id=request.user.id)).cart
+        if request.user.is_authenticated:
+            for item in items:
+                if str(item.id) in user_items:
+                    cart.append(item.id)
+    except Carts.DoesNotExist:
+        cart = []
+    return render(request, "main/main.html", {'items': items, 'cart': cart})
 
 
 def shops(request):
@@ -30,7 +36,16 @@ def shops(request):
 def selected_store(request):
     items = Items.objects.all()
     shop_name = request.META['QUERY_STRING'].split("=")[1]
-    return render(request, "main/selected_store.html", {'items': items, 'shop_name': shop_name})
+    cart = []
+    try:
+        user_items = (Carts.objects.get(user_id=request.user.id)).cart
+        if request.user.is_authenticated:
+            for item in items:
+                if str(item.id) in user_items:
+                    cart.append(item.id)
+    except Carts.DoesNotExist:
+        cart = []
+    return render(request, "main/selected_store.html", {'items': items, 'shop_name': shop_name, 'cart': cart})
 
 
 def shop_items(request):
@@ -72,16 +87,13 @@ def user_cart(request):
             if str(item.id) in user_items:
                 cart.append(item.id)
     except Carts.DoesNotExist:
-        cart = None
+        cart = []
     return render(request, "main/user_cart.html", {'cart': cart, 'items': items})
 
 
 def add_to_user_cart(request):
-
     address = request.META.get('HTTP_REFERER').split("/")[3]
-
     new_item_id = request.META['QUERY_STRING'].split("=")[1]
-    print(new_item_id)
 
     user = request.user.id
 
@@ -125,7 +137,15 @@ def remove_from_user_cart(request):
     record = Carts(user_id=user, cart=cart_to_update)
     record.save()
     messages.warning(request, "The item was removed from your cart!")
-    return redirect("user_cart")
+
+    address = request.META.get('HTTP_REFERER').split("/")[3]
+    if address == "user_cart":
+        return redirect("user_cart")
+    elif address == "":
+        return redirect("main")
+    else:
+        shop_name = (Items.objects.get(id=delete_item_id)).shop_name
+        return redirect(f"/selected_store?shop_name={shop_name}")
 
 
 def register_request(request):
