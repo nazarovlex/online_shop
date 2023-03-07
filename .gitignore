@@ -1,7 +1,6 @@
 .idea
 venv
 __pycache__
-/secret_key.txt
 /online_shop/db.sqlite3
 /online_shop/main/migrations/
 /online_shop/main/static/main/img/
