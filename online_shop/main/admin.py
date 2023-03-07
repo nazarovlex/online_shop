@@ -3,4 +3,3 @@ from .models import Items, Carts
 
 admin.site.register(Items)
 admin.site.register(Carts)
-

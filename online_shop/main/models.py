@@ -25,12 +25,3 @@ class Carts(models.Model):
     class Meta:
         verbose_name = "Cart"
         verbose_name_plural = "Carts"
-
-
-# class ShopItems(models.Model):
-#     shop_id = models.IntegerField(null=True)
-#     shop_items = models.JSONField(null=True, blank=True)
-#
-#     class Meta:
-#         verbose_name = "ShopItem"
-#         verbose_name_plural = "ShopItems"

@@ -24,9 +24,8 @@ class NewUserForm(UserCreationForm):
 class NewItemForm(ModelForm):
     class Meta:
         model = Items
-        # product_name = forms.TextInput
-        # shop_name = forms.TextInput
-        fields = ["product_name" , "price", "img"]
+
+        fields = ["product_name", "price", "img"]
 
         widgets = {
             "product_name": TextInput(attrs={
@@ -38,6 +37,6 @@ class NewItemForm(ModelForm):
                 "placeholder": "Input price",
                 'class': 'form-control'}),
             "img": FileInput(attrs={
-                "upload_to": "'main/static/main/img'"
+                "upload_to": f"'main/static/main/img'"
             })
         }

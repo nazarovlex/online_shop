@@ -1,0 +1,23 @@
+{% extends "main/layout.html" %}
+
+
+{% block title %}Shop now {% endblock %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+{% for group in  request.user.groups.all %}
+{%  if 'Users' == group.name %}
+<div id="register" class="container py-5">
+	<h1>Delete account</h1>
+	<label for="delete_button">Do you want to delete your account?</label> <br>
+	<button id="delete_button" onclick="location.href='delete_user'" type="button" class="btn btn-danger">Delete</button>
+</div>
+ {% elif 'Shops' == group.name %}
+<div id="register" class="container py-5">
+	<h1>Delete account</h1>
+	<label for="delete_button">Do you want to delete shop account?</label> <br>
+	<button id="delete_button" onclick="location.href='delete_shop'" type="button" class="btn btn-danger">Delete</button>
+</div>
+{% endif %}
+{% endfor %}
+{% endblock %}

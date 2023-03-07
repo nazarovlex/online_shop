@@ -1,7 +1,6 @@
 body {
     background: #2c2c2c;
-    /*overflow-x: hidden;*/
-    /*overflow-y: visible;*/
+
 }
 
 aside {
@@ -14,6 +13,7 @@ aside {
     border-right: 5px solid #4d4d4d;
     position: fixed;
 }
+
 .list-group {
     position: absolute;
     margin-top: 200px;
@@ -41,7 +41,6 @@ aside {
     width: 35%;
     color: white;
 }
-
 
 aside img {
     width: 80px;

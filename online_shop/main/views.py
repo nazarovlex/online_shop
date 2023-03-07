@@ -1,5 +1,3 @@
-from django.http import HttpResponseRedirect
-
 from .models import Items, Carts
 from django.shortcuts import render, redirect
 from .forms import NewUserForm, NewItemForm
@@ -210,5 +208,22 @@ def delete_user(request):
     return redirect("main")
 
 
-def profile_settings(request):
-    return render(request, "main/profile_settings.html")
+def delete_shop(request):
+    shop_name = request.user
+    all_shop_items = Items.objects.filter(shop_name=shop_name)
+    for item in all_shop_items:
+        item.delete()
+    if not request.user.is_authenticated:
+        return redirect("login")
+
+    if request.method == 'GET':
+        try:
+            u = User.objects.get(username=shop_name)
+            u.delete()
+        except Exception:
+            messages.info(request, "Something went wrong!")
+    return redirect("main")
+
+
+def delete_account(request):
+    return render(request, "main/delete_acccount.html")

@@ -33,10 +33,10 @@
         <a href="{% url 'shops' %}"><li><i class="fas fa-store">Shops</i></li></a>
         {% for group in  request.user.groups.all %}
             {%  if 'Users' == group.name %}
-                <a href="{% url 'profile_settings' %}"><li><i class="fas fa-user-cog">Profile settings</i></li></a>
+                <a href="{% url 'profile_settings' %}"><li><i class="fas fa-user-cog">Delete account</i></li></a>
                 <a href="{% url 'user_cart' %}"><li><i class="fas fa-cog">Cart</i></li></a>
              {% elif 'Shops' == group.name %}
-                <a href=""><li><i class="fas fa-user-cog">Shop settings</i></li></a>
+                <a href="{% url 'profile_settings' %}"><li><i class="fas fa-user-cog">Delete shop account</i></li></a>
                 <a href="{% url 'shop_items' %}"><li><i class="fas fa-cog">Shop items</i></li></a>
             {% endif %}
         {% endfor %}
